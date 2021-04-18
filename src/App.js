@@ -1,23 +1,34 @@
-import logo from './logo.svg';
+import HtmlToCanvas from './components/HtmlToCanvas';
+import HtmlToImage from './components/HtmlToImage';
+import visualizations from './visualizations.js';
 import './App.css';
 
 function App() {
+  
+  const saveAs = (blob, fileName) =>{
+    var elem = window.document.createElement('a');
+    elem.href = blob
+    elem.download = fileName;
+    elem.style = 'display:none;';
+    (document.body || document.documentElement).appendChild(elem);
+    if (typeof elem.click === 'function') {
+        elem.click();
+    } else {
+        elem.target = '_blank';
+        elem.dispatchEvent(new MouseEvent('click', {
+        view: window,
+        bubbles: true,
+        cancelable: true
+        }));
+    }
+    URL.revokeObjectURL(elem.href);
+    elem.remove()
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <HtmlToCanvas data={visualizations} saveAs={saveAs}/>
+      <HtmlToImage data={visualizations} saveAs={saveAs}/>
     </div>
   );
 }
